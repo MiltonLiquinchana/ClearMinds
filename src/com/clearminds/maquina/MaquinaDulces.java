@@ -9,7 +9,7 @@ import com.clearminds.componentes.Producto;
 
 public class MaquinaDulces {
 	private ArrayList<Celda> celdas = new ArrayList<Celda>();;
-	public Map<Double, Integer> dineroActual = new HashMap<Double, Integer>();/* Temporalmente public */
+	private Map<Double, Integer> dineroActual = new HashMap<Double, Integer>();
 	private double saldo;
 	private double totalMontoIngresado;
 	private double montosValidos[] = { 0.01, 0.05, 0.10, 0.25, 0.50, 1, 5 };
@@ -168,14 +168,10 @@ public class MaquinaDulces {
 		this.totalMontoIngresado = 0;
 	}
 
+	/*Metodo que calcula el tipo y cuantas monedas respectivamente hay que entregar de cambio*/
 	public HashMap<Double, Integer> venderConEntregaCambio(String codigoCelda) {
 		Producto producto = buscarProductoEnCelda(codigoCelda);
 		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
-		return cambio(totalCambio);
-
-	}
-
-	private HashMap<Double, Integer> cambio(double totalCambio) {
 		double resto = 0;
 		int monedasCinco = monedas(totalCambio, 5);
 		resto = resto(totalCambio, 5);
@@ -216,9 +212,70 @@ public class MaquinaDulces {
 		}
 		resetearDinero();
 		return entregaVuelto;
+
 	}
 
+	private HashMap<Double, Integer> cambio(String codigoCelda) {
+		Producto producto = buscarProductoEnCelda(codigoCelda);
+		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
+		double resto = 0;
+		int monedasCinco = monedasControlado(totalCambio, 5);
+		resto = restoControlado(totalCambio, 5);
+		int monedasUno = monedasControlado(resto, 1);
+		resto = restoControlado(resto, 1);
+		int monedasCeroCincuenta = monedasControlado(resto, 0.50);
+		resto = restoControlado(resto, 0.50);
+		int monedasCeroVeintiCinco = monedasControlado(resto, 0.25);
+		resto = restoControlado(resto, 0.25);
+		int monedasCeroDies = monedasControlado(resto, 0.10);
+		resto = restoControlado(resto, 0.10);
+		int monedasCeroCinco = monedasControlado(resto, 0.05);
+		resto = restoControlado(resto, 0.05);
+		int monedasCeroUno = monedasControlado(resto, 0.01);
+		resto = restoControlado(resto, 0.01);
+		HashMap<Double, Integer> entregaVuelto = new HashMap<Double, Integer>();
+
+		if (monedasCinco > 0) {
+			entregaVuelto.put(montosValidos[6], monedasCinco);
+		}
+		if (monedasUno > 0) {
+			entregaVuelto.put(montosValidos[5], monedasUno);
+		}
+		if (monedasCeroCincuenta > 0) {
+			entregaVuelto.put(montosValidos[4], monedasCeroCincuenta);
+		}
+		if (monedasCeroVeintiCinco > 0) {
+			entregaVuelto.put(montosValidos[3], monedasCeroVeintiCinco);
+		}
+		if (monedasCeroDies > 0) {
+			entregaVuelto.put(montosValidos[2], monedasCeroDies);
+		}
+		if (monedasCeroCinco > 0) {
+			entregaVuelto.put(montosValidos[1], monedasCeroCinco);
+		}
+		if (monedasCeroUno > 0) {
+			entregaVuelto.put(montosValidos[0], monedasCeroUno);
+		}
+		resetearDinero();
+		return entregaVuelto;
+	}
+
+	/*Este metodo calcula el numero de monedas a entregar de cierta cantidad*/
 	private int monedas(double cantidad, double tipo) {
+
+		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
+
+		return numeroMonedas;
+	}
+	/*Este metodo valida si es necesario continuar restando para obtener la cantiad adecuada de cambio a entregar*/
+	private double resto(double cantidad, double tipo) {
+		double residuo = cantidad % tipo;
+
+		return residuo;
+	}
+	
+	/*Realiza el mismo proceso que la funcion monedas, pero esta funcion valida si hay en caja la cantidad de monedas a entregar*/
+	private int monedasControlado(double cantidad, double tipo) {
 
 		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
 		if (dineroActual.containsKey(tipo)) {
@@ -227,25 +284,23 @@ public class MaquinaDulces {
 			return 0;
 		}
 
-//		return numeroMonedas;
 	}
 
-	private double resto(double cantidad, double tipo) {
+	private double restoControlado(double cantidad, double tipo) {
 		double residuo = cantidad % tipo;
 		if (dineroActual.containsKey(tipo)) {
 			return residuo;
 		} else {
 			return cantidad;
 		}
-//		return residuo;
 	}
 
 	public void cargaInicial(double valorMoneda, int cantidad) {
-		dineroActual.put(valorMoneda, cantidad);// 0.25(3), 0.10, 0.50(0) =0.75
+		dineroActual.put(valorMoneda, cantidad);
 	}
 
 	public void venderConCambioControlado(String codigoCelda) {
 
-		System.out.println("Cambio a entregar: " + cambio(0.74));
+		System.out.println("Cambio a entregar: " + cambio("C1"));
 	}
 }
