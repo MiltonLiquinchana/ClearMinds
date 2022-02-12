@@ -171,7 +171,11 @@ public class MaquinaDulces {
 	public HashMap<Double, Integer> venderConEntregaCambio(String codigoCelda) {
 		Producto producto = buscarProductoEnCelda(codigoCelda);
 		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
+		return cambio(totalCambio);
 
+	}
+
+	private HashMap<Double, Integer> cambio(double totalCambio) {
 		double resto = 0;
 		int monedasCinco = monedas(totalCambio, 5);
 		resto = resto(totalCambio, 5);
@@ -188,7 +192,7 @@ public class MaquinaDulces {
 		int monedasCeroUno = monedas(resto, 0.01);
 		resto = resto(resto, 0.01);
 		HashMap<Double, Integer> entregaVuelto = new HashMap<Double, Integer>();
-//		{ 0.01, 0.05, 0.10, 0.25, 0.50, 1, 5 }
+
 		if (monedasCinco > 0) {
 			entregaVuelto.put(montosValidos[6], monedasCinco);
 		}
@@ -212,21 +216,33 @@ public class MaquinaDulces {
 		}
 		resetearDinero();
 		return entregaVuelto;
-
 	}
 
 	private int monedas(double cantidad, double tipo) {
 
-		int billetes = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
+		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
+		if (dineroActual.containsKey(tipo)) {
+			System.out.println("Si hay monedas de: " + tipo);
+			return numeroMonedas;
+		} else {
+			System.out.println("No hay monedas de: " + tipo);
+			return (5*0);
+		}
 
-		return billetes;
+//		return numeroMonedas;
 	}
 
 	private double resto(double cantidad, double tipo) {
 		double residuo = cantidad % tipo;
+		if (dineroActual.containsKey(tipo)) {
+			System.out.println("Si hay monedas de: " + tipo);
+			return residuo;
+		} else {
+			System.out.println("No hay monedas de: " + tipo);
+			return cantidad;
+		}
 
-		return residuo;
-
+		
 	}
 
 	public void cargaInicial(double valorMoneda, int cantidad) {
@@ -250,4 +266,19 @@ public class MaquinaDulces {
 //
 //		System.out.println("Cambio controlado: " + cambioControlado);
 //	}
+
+	public void venderConCambioControlado(String codigoCelda) {
+
+//		HashMap<Double, Integer> entregaVuelto = venderConEntregaCambio(codigoCelda);
+//		HashMap<Double, Integer> vuelto = new HashMap<>();
+//		for (Double clave : entregaVuelto.keySet()) {
+//
+//			for (Double claveDineroActual : entregaVuelto.keySet()) {
+//				if (clave != claveDineroActual) {
+//				}
+//			}
+//
+//		}
+		System.out.println("no funciona: " + cambio(0.74));
+	}
 }

@@ -13,15 +13,14 @@ public class borrador {
 		maquina.agregarCelda("C1");
 		maquina.agregarCelda("D");
 
-		Producto producto = new Producto("KE34", "Papitas", 0.25);
+		Producto producto = new Producto("KE34", "Papitas", 0.26);
 		maquina.cargarProducto(producto, "C1", 4);
 		maquina.cargaInicial(0.25, 10);
-		System.out.println(maquina.dineroActual);
+		maquina.cargaInicial(0.01, 100);
+		maquina.recibirDinero(1);
+//		System.out.println(maquina.dineroActual);
 
-//		System.out.println("Total dinero ingresado: " + maquina.consultarDineroIngresado());
-//		System.out.println("Cambio a entregar: \n" + maquina.venderConEntregaCambio("C1"));
-//		System.out.println("Total dinero ingresado despues de resetear: " + maquina.consultarDineroIngresado());
-//		maquina.venderConCambioControlado();
+		maquina.venderConCambioControlado("C1");
 	}
 
 }
