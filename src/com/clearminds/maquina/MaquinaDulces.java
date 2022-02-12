@@ -222,11 +222,9 @@ public class MaquinaDulces {
 
 		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
 		if (dineroActual.containsKey(tipo)) {
-			System.out.println("Si hay monedas de: " + tipo);
 			return numeroMonedas;
 		} else {
-			System.out.println("No hay monedas de: " + tipo);
-			return (5*0);
+			return 0;
 		}
 
 //		return numeroMonedas;
@@ -235,50 +233,19 @@ public class MaquinaDulces {
 	private double resto(double cantidad, double tipo) {
 		double residuo = cantidad % tipo;
 		if (dineroActual.containsKey(tipo)) {
-			System.out.println("Si hay monedas de: " + tipo);
 			return residuo;
 		} else {
-			System.out.println("No hay monedas de: " + tipo);
 			return cantidad;
 		}
-
-		
+//		return residuo;
 	}
 
 	public void cargaInicial(double valorMoneda, int cantidad) {
 		dineroActual.put(valorMoneda, cantidad);// 0.25(3), 0.10, 0.50(0) =0.75
 	}
 
-//	public void venderConCambioControlado() {
-//		HashMap<Double, Integer> cambioControlado = venderConEntregaCambio("C1");
-//		List<ArrayList<Double>> dineroValido = new ArrayList<>();
-//		;
-//		int moneda = 0;
-//		for (Double valido : montosValidos) {
-//			if (dineroActual.containsKey(valido)) {
-//				List lista=Arrays.asList(55,55);
-//				dineroValido.add(Arrays.asList([valido,dineroActual.get(valido)]));
-//			}
-//		}
-//
-//		System.out.println(dineroValido);
-//		System.out.println("total a dar: " + (monedas(0.75, 0.25)));
-//
-//		System.out.println("Cambio controlado: " + cambioControlado);
-//	}
-
 	public void venderConCambioControlado(String codigoCelda) {
 
-//		HashMap<Double, Integer> entregaVuelto = venderConEntregaCambio(codigoCelda);
-//		HashMap<Double, Integer> vuelto = new HashMap<>();
-//		for (Double clave : entregaVuelto.keySet()) {
-//
-//			for (Double claveDineroActual : entregaVuelto.keySet()) {
-//				if (clave != claveDineroActual) {
-//				}
-//			}
-//
-//		}
-		System.out.println("no funciona: " + cambio(0.74));
+		System.out.println("Cambio a entregar: " + cambio(0.74));
 	}
 }
