@@ -15,12 +15,12 @@ public class borrador {
 
 		Producto producto = new Producto("KE34", "Papitas", 0.26);
 		maquina.cargarProducto(producto, "C1", 4);
-//		maquina.cargaInicial(0.25, 10);
+		maquina.cargaInicial(0.25, 10);
 		maquina.cargaInicial(0.01, 100);
 		maquina.recibirDinero(1);
 //		System.out.println(maquina.dineroActual);
 
-		maquina.venderConCambioControlado("C1");
+		System.out.println(maquina.venderConCambioControlado("C1"));
 	}
 
 }

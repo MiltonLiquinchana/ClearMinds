@@ -168,7 +168,10 @@ public class MaquinaDulces {
 		this.totalMontoIngresado = 0;
 	}
 
-	/*Metodo que calcula el tipo y cuantas monedas respectivamente hay que entregar de cambio*/
+	/*
+	 * Metodo que calcula el tipo y cuantas monedas respectivamente hay que entregar
+	 * de cambio
+	 */
 	public HashMap<Double, Integer> venderConEntregaCambio(String codigoCelda) {
 		Producto producto = buscarProductoEnCelda(codigoCelda);
 		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
@@ -215,7 +218,55 @@ public class MaquinaDulces {
 
 	}
 
-	private HashMap<Double, Integer> cambio(String codigoCelda) {
+
+	/* Este metodo calcula el numero de monedas a entregar de cierta cantidad */
+	private int monedas(double cantidad, double tipo) {
+
+		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
+
+		return numeroMonedas;
+	}
+
+	/*
+	 * Este metodo valida si es necesario continuar restando para obtener la cantiad
+	 * adecuada de cambio a entregar
+	 */
+	private double resto(double cantidad, double tipo) {
+		double residuo = cantidad % tipo;
+
+		return residuo;
+	}
+
+	/*
+	 * Realiza el mismo proceso que la funcion monedas, pero esta funcion valida si
+	 * hay en caja la cantidad de monedas a entregar
+	 */
+	private int monedasControlado(double cantidad, double tipo) {
+
+		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
+		if (dineroActual.containsKey(tipo)) {
+			return numeroMonedas;
+		} else {
+			return 0;
+		}
+
+	}
+
+	private double restoControlado(double cantidad, double tipo) {
+		double residuo = cantidad % tipo;
+		if (dineroActual.containsKey(tipo)) {
+			return residuo;
+		} else {
+			return cantidad;
+		}
+	}
+
+	public void cargaInicial(double valorMoneda, int cantidad) {
+		dineroActual.put(valorMoneda, cantidad);
+	}
+
+	public HashMap<Double, Integer> venderConCambioControlado(String codigoCelda) {
+
 		Producto producto = buscarProductoEnCelda(codigoCelda);
 		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
 		double resto = 0;
@@ -258,49 +309,5 @@ public class MaquinaDulces {
 		}
 		resetearDinero();
 		return entregaVuelto;
-	}
-
-	/*Este metodo calcula el numero de monedas a entregar de cierta cantidad*/
-	private int monedas(double cantidad, double tipo) {
-
-		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
-
-		return numeroMonedas;
-	}
-	/*Este metodo valida si es necesario continuar restando para obtener la cantiad adecuada de cambio a entregar*/
-	private double resto(double cantidad, double tipo) {
-		double residuo = cantidad % tipo;
-
-		return residuo;
-	}
-	
-	/*Realiza el mismo proceso que la funcion monedas, pero esta funcion valida si hay en caja la cantidad de monedas a entregar*/
-	private int monedasControlado(double cantidad, double tipo) {
-
-		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
-		if (dineroActual.containsKey(tipo)) {
-			return numeroMonedas;
-		} else {
-			return 0;
-		}
-
-	}
-
-	private double restoControlado(double cantidad, double tipo) {
-		double residuo = cantidad % tipo;
-		if (dineroActual.containsKey(tipo)) {
-			return residuo;
-		} else {
-			return cantidad;
-		}
-	}
-
-	public void cargaInicial(double valorMoneda, int cantidad) {
-		dineroActual.put(valorMoneda, cantidad);
-	}
-
-	public void venderConCambioControlado(String codigoCelda) {
-
-		System.out.println("Cambio a entregar: " + cambio("C1"));
 	}
 }
