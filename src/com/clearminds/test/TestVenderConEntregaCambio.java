@@ -14,7 +14,7 @@ public class TestVenderConEntregaCambio {
 
 		Producto producto = new Producto("KE34", "Papitas", 0.26);
 		maquina.cargarProducto(producto, "C1", 4);
-		maquina.recibirDinero(1);
+		maquina.recibirDinero(5);
 
 		System.out.println("Total dinero ingresado: " + maquina.consultarDineroIngresado());
 		System.out.println("Cambio a entregar: \n" + maquina.venderConEntregaCambio("C1"));

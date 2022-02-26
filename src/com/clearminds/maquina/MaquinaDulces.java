@@ -8,8 +8,8 @@ import com.clearminds.componentes.Celda;
 import com.clearminds.componentes.Producto;
 
 public class MaquinaDulces {
-	private ArrayList<Celda> celdas = new ArrayList<Celda>();;
-	private Map<Double, Integer> dineroActual = new HashMap<Double, Integer>();
+	private ArrayList<Celda> celdas = new ArrayList<Celda>();
+	public Map<Double, Integer> dineroActual = new HashMap<Double, Integer>();
 	private double saldo;
 	private double totalMontoIngresado;
 	private double montosValidos[] = { 0.01, 0.05, 0.10, 0.25, 0.50, 1, 5 };
@@ -137,23 +137,29 @@ public class MaquinaDulces {
 		return productosReturn;
 	}
 
-	/* Metodos de evaluacion java standar */
 	public void recibirDinero(double monto) {
 
 		if (montosValidos[0] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else if (montosValidos[1] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else if (montosValidos[2] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else if (montosValidos[3] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else if (montosValidos[4] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else if (montosValidos[5] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else if (montosValidos[6] == monto) {
 			totalMontoIngresado += monto;
+			cargaInicial(monto, 1);
 		} else {
 			System.out.println("Billete o moneda rechazado: " + monto);
 		}
@@ -172,142 +178,182 @@ public class MaquinaDulces {
 	 * Metodo que calcula el tipo y cuantas monedas respectivamente hay que entregar
 	 * de cambio
 	 */
-	public HashMap<Double, Integer> venderConEntregaCambio(String codigoCelda) {
-		Producto producto = buscarProductoEnCelda(codigoCelda);
-		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
-		double resto = 0;
-		int monedasCinco = monedas(totalCambio, 5);
-		resto = resto(totalCambio, 5);
-		int monedasUno = monedas(resto, 1);
-		resto = resto(resto, 1);
-		int monedasCeroCincuenta = monedas(resto, 0.50);
-		resto = resto(resto, 0.50);
-		int monedasCeroVeintiCinco = monedas(resto, 0.25);
-		resto = resto(resto, 0.25);
-		int monedasCeroDies = monedas(resto, 0.10);
-		resto = resto(resto, 0.10);
-		int monedasCeroCinco = monedas(resto, 0.05);
-		resto = resto(resto, 0.05);
-		int monedasCeroUno = monedas(resto, 0.01);
-		resto = resto(resto, 0.01);
-		HashMap<Double, Integer> entregaVuelto = new HashMap<Double, Integer>();
+	public HashMap<Double, Integer> venderConEntregaCambio(String codigo) {
 
-		if (monedasCinco > 0) {
-			entregaVuelto.put(montosValidos[6], monedasCinco);
+		Producto producto = this.buscarProductoEnCelda(codigo);
+
+		HashMap<Double, Integer> valorEntregar = new HashMap<Double, Integer>();
+
+		double cambio = consultarDineroIngresado() - producto.getPrecio();
+
+		// Transforma el cambio a centavos
+		double centavos = cambio / 0.01;
+
+		// Valores de 5.00
+		if (centavos >= 500) {
+			int moneda = (int) centavos / 500;
+			valorEntregar.put(5.00, moneda);
+			centavos -= moneda * 500;
 		}
-		if (monedasUno > 0) {
-			entregaVuelto.put(montosValidos[5], monedasUno);
+
+		// Valores de 1.00
+		if (centavos >= 100) {
+			int moneda = (int) centavos / 100;
+			valorEntregar.put(1.00, moneda);
+			centavos -= moneda * 100;
 		}
-		if (monedasCeroCincuenta > 0) {
-			entregaVuelto.put(montosValidos[4], monedasCeroCincuenta);
+
+		// Valores de 0.50
+		if (centavos >= 50) {
+			int moneda = (int) centavos / 50;
+			valorEntregar.put(0.50, moneda);
+			centavos -= moneda * 50;
 		}
-		if (monedasCeroVeintiCinco > 0) {
-			entregaVuelto.put(montosValidos[3], monedasCeroVeintiCinco);
+
+		// Valores de 0.25
+		if (centavos >= 25) {
+			int moneda = (int) centavos / 25;
+			valorEntregar.put(0.25, moneda);
+			centavos -= moneda * 25;
 		}
-		if (monedasCeroDies > 0) {
-			entregaVuelto.put(montosValidos[2], monedasCeroDies);
+
+		// Valores de 0.10
+		if (centavos >= 10) {
+			int moneda = (int) centavos / 10;
+			valorEntregar.put(0.10, moneda);
+			centavos -= moneda * 10;
 		}
-		if (monedasCeroCinco > 0) {
-			entregaVuelto.put(montosValidos[1], monedasCeroCinco);
+
+		// Valores de 0.05
+		if (centavos >= 5) {
+			int moneda = (int) centavos / 5;
+			valorEntregar.put(0.05, moneda);
+			centavos -= moneda * 5;
 		}
-		if (monedasCeroUno > 0) {
-			entregaVuelto.put(montosValidos[0], monedasCeroUno);
+
+		// Valores de 0.01
+		if (centavos >= 1) {
+			int moneda = (int) centavos / 1;
+			valorEntregar.put(0.01, moneda);
+			centavos -= moneda * 1;
 		}
 		resetearDinero();
-		return entregaVuelto;
+		return valorEntregar;
 
-	}
-
-
-	/* Este metodo calcula el numero de monedas a entregar de cierta cantidad */
-	private int monedas(double cantidad, double tipo) {
-
-		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
-
-		return numeroMonedas;
-	}
-
-	/*
-	 * Este metodo valida si es necesario continuar restando para obtener la cantiad
-	 * adecuada de cambio a entregar
-	 */
-	private double resto(double cantidad, double tipo) {
-		double residuo = cantidad % tipo;
-
-		return residuo;
-	}
-
-	/*
-	 * Realiza el mismo proceso que la funcion monedas, pero esta funcion valida si
-	 * hay en caja la cantidad de monedas a entregar
-	 */
-	private int monedasControlado(double cantidad, double tipo) {
-
-		int numeroMonedas = (int) (Math.ceil(cantidad * 100) / Math.ceil(tipo * 100));
-		if (dineroActual.containsKey(tipo)) {
-			return numeroMonedas;
-		} else {
-			return 0;
-		}
-
-	}
-
-	private double restoControlado(double cantidad, double tipo) {
-		double residuo = cantidad % tipo;
-		if (dineroActual.containsKey(tipo)) {
-			return residuo;
-		} else {
-			return cantidad;
-		}
 	}
 
 	public void cargaInicial(double valorMoneda, int cantidad) {
-		dineroActual.put(valorMoneda, cantidad);
+		if (dineroActual.containsKey(valorMoneda)) {
+			dineroActual.put(valorMoneda, dineroActual.get(valorMoneda) + cantidad);
+		} else {
+			dineroActual.put(valorMoneda, cantidad);
+		}
+
 	}
 
-	public HashMap<Double, Integer> venderConCambioControlado(String codigoCelda) {
+	// Vender con cambio controlado
+	public HashMap<Double, Integer> venderConCambioControlado(String codigo) {
+		Producto producto = this.buscarProductoEnCelda(codigo);
 
-		Producto producto = buscarProductoEnCelda(codigoCelda);
-		double totalCambio = consultarDineroIngresado() - producto.getPrecio();
-		double resto = 0;
-		int monedasCinco = monedasControlado(totalCambio, 5);
-		resto = restoControlado(totalCambio, 5);
-		int monedasUno = monedasControlado(resto, 1);
-		resto = restoControlado(resto, 1);
-		int monedasCeroCincuenta = monedasControlado(resto, 0.50);
-		resto = restoControlado(resto, 0.50);
-		int monedasCeroVeintiCinco = monedasControlado(resto, 0.25);
-		resto = restoControlado(resto, 0.25);
-		int monedasCeroDies = monedasControlado(resto, 0.10);
-		resto = restoControlado(resto, 0.10);
-		int monedasCeroCinco = monedasControlado(resto, 0.05);
-		resto = restoControlado(resto, 0.05);
-		int monedasCeroUno = monedasControlado(resto, 0.01);
-		resto = restoControlado(resto, 0.01);
-		HashMap<Double, Integer> entregaVuelto = new HashMap<Double, Integer>();
+		HashMap<Double, Integer> valorEntregar = new HashMap<Double, Integer>();
 
-		if (monedasCinco > 0) {
-			entregaVuelto.put(montosValidos[6], monedasCinco);
+		double cambio = consultarDineroIngresado() - producto.getPrecio();
+
+		// Transforma el cambio a centavos
+		double centavos = cambio / 0.01;
+
+		// Verificamos si hay cantidades de 5 dolares
+		if (this.dineroActual.containsKey(5.00) && centavos >= 500) {
+			for (int i = 1; i <= dineroActual.get(5.00); i++) {
+				if (centavos >= 500) {
+					centavos -= 500;
+					valorEntregar.put(5.00, i);
+					this.dineroActual.put(5.00, dineroActual.get(5.00) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		if (monedasUno > 0) {
-			entregaVuelto.put(montosValidos[5], monedasUno);
+
+		// Verificamos si hay valores de 1 en la maquina
+		if (this.dineroActual.containsKey(1.00) && centavos >= 100) {
+			for (int i = 1; i <= dineroActual.get(1.00); i++) {
+				if (centavos >= 100) {
+					centavos -= 100;
+					valorEntregar.put(1.00, i);
+					this.dineroActual.put(1.00, dineroActual.get(1.00) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		if (monedasCeroCincuenta > 0) {
-			entregaVuelto.put(montosValidos[4], monedasCeroCincuenta);
+
+		// Verificamos si hay valores de 0.50 en la maquina
+		if (this.dineroActual.containsKey(0.50) && centavos >= 50) {
+			for (int i = 1; i <= dineroActual.get(0.50); i++) {
+				if (centavos >= 50) {
+					centavos -= 50;
+					valorEntregar.put(0.50, i);
+					this.dineroActual.put(0.50, dineroActual.get(0.50) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		if (monedasCeroVeintiCinco > 0) {
-			entregaVuelto.put(montosValidos[3], monedasCeroVeintiCinco);
+
+		// Verificamos si hay valores de 0.25 en la maquina
+		if (this.dineroActual.containsKey(0.25) && centavos >= 25) {
+			for (int i = 1; i <= dineroActual.get(0.25); i++) {
+				if (centavos >= 25) {
+					centavos -= 25;
+					valorEntregar.put(0.25, i);
+					this.dineroActual.put(0.25, dineroActual.get(0.25) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		if (monedasCeroDies > 0) {
-			entregaVuelto.put(montosValidos[2], monedasCeroDies);
+
+		// Verificamos si hay valores de 0.10 en la maquina
+		if (this.dineroActual.containsKey(0.10) && centavos >= 10) {
+			for (int i = 1; i <= dineroActual.get(0.10); i++) {
+				if (centavos >= 10) {
+					centavos -= 10;
+					valorEntregar.put(0.10, i);
+					this.dineroActual.put(0.10, dineroActual.get(0.10) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		if (monedasCeroCinco > 0) {
-			entregaVuelto.put(montosValidos[1], monedasCeroCinco);
+
+		// Verificamos si hay valores de 0.05 en la maquina
+		if (this.dineroActual.containsKey(0.05) && centavos >= 5) {
+			for (int i = 1; i <= dineroActual.get(0.05); i++) {
+				if (centavos >= 5) {
+					centavos -= 5;
+					valorEntregar.put(0.05, i);
+					this.dineroActual.put(0.05, dineroActual.get(0.05) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		if (monedasCeroUno > 0) {
-			entregaVuelto.put(montosValidos[0], monedasCeroUno);
+
+		// Verificamos si hay valores de 0.01 en la maquina
+		if (this.dineroActual.containsKey(0.01) && centavos >= 1) {
+			for (int i = 1; i <= dineroActual.get(0.01); i++) {
+				if (centavos >= 1) {
+					centavos -= 1;
+					valorEntregar.put(0.01, i);
+					this.dineroActual.put(0.01, dineroActual.get(0.01) - 1);
+				} else {
+					break;
+				}
+			}
 		}
-		resetearDinero();
-		return entregaVuelto;
+
+		return valorEntregar;
+
 	}
 }
